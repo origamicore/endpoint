@@ -1,0 +1,81 @@
+<html>
+    <body>
+        
+        <script>
+            var name='';
+            var baseUrl='http://localhost:9201/profile/'
+            function callApi(url, cFunction) {
+                const xhttp = new XMLHttpRequest();
+                xhttp.onload = function() {
+                    console.log(this);
+                    if(this.status==403)
+                    {
+                        window.localStorage.setItem('token','')
+                        return alert(this.responseText)
+                    }
+                    if(this.responseText)
+                    {
+                        var resp=JSON.parse(this.responseText)
+                        if(resp.token)
+                        {
+                            window.localStorage.setItem('token',resp.token)
+                        }
+                        cFunction( resp.data);
+
+                    } 
+                }
+                xhttp.open("GET",baseUrl+ url);
+                if(window.localStorage.token)
+                    xhttp.setRequestHeader('authorization',window.localStorage.token)
+                xhttp.send();
+            }
+            function login()
+            {
+                callApi('login?name='+name,(data)=>{ 
+                    console.log(data);
+                })
+
+            }
+            function adminlogin()
+            {
+                callApi('adminLogin?name='+name,(data)=>{ 
+                    console.log(data);
+                })
+
+            }
+            function checkLogin()
+            {
+                callApi('isLogin',(data)=>{ 
+                    console.log(data);
+                    alert('you are login')
+                })
+            }
+            function checkAdmim()
+            {
+                callApi('isAdmin',(data)=>{ 
+                    console.log(data);
+                    alert('you are admin')
+                })
+            }
+            function loadProfile()
+            {
+                callApi('getProfile',(data)=>{
+                    name=data.firstName;
+                    document.getElementById('profile').innerHTML=`FirstName : ${data.firstName} <br/> LastName:${data.lastName}`
+                    console.log(data);
+                })
+            }
+            //checkLogin()
+            loadProfile()
+        </script>
+        <div id="profile">
+
+        </div>
+        <button onclick="login()">Login</button>
+        <button onclick="checkLogin()">Chcek Login</button>
+
+        <br/>
+        <button onclick="adminlogin()">Admin Login</button>
+        <button onclick="checkAdmim()">Chcek Admin</button>
+    </body>
+</html>
