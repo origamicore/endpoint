@@ -7,12 +7,20 @@
             var baseUrl='ws://localhost:9202';
             const client = new WebSocket(baseUrl, 'echo-protocol');
             var temp={};
-            function callApi(domain,service,param) {
+            function callApi(domain,service,param,callBack) {
                 id++;
-                return new Promise((res,rej)=>{
+                if(callBack)
+                {
+                    temp[id.toString()]={callBack}
                     client.send(JSON.stringify({domain,service,param,id,token})); 
-                    temp[id.toString()]={res,rej}
-                })
+                }
+                else
+                {
+                    return new Promise((res,rej)=>{
+                        temp[id.toString()]={res,rej}
+                        client.send(JSON.stringify({domain,service,param,id,token})); 
+                    })                    
+                }
             } 
 
             async function loadProfile()
@@ -37,13 +45,20 @@
                 }
                 if(temp[id])
                 {
-                    if(data.error)temp[id].rej(data.error)
-                    else temp[id].res(data.data)
+                    if(temp[id].callBack)
+                    {
+                        temp[id].callBack(data)
+                    }
+                    else
+                    {
+                        if(data.error)temp[id].rej(data.error)
+                        else temp[id].res(data.data)
+                    }
                 } 
             });
             async function login()
             {
-                var data =await callApi('profile','login',{name})
+                var data =await callApi('profile','login',{name:'vahid'})
                 console.log(data);
 
             }
@@ -59,11 +74,19 @@
                 }
                     
             }
+            async function sampleEvent()
+            {
+                callApi('profile','sampleEvent',{},(data)=>{
+                    console.log('event:',data);
+                })
+            }
         </script>
         <div id="profile">
 
         </div>
         <button onclick="login()">Login</button>
         <button onclick="checkLogin()">Chcek Login</button>
+        <button onclick="sampleEvent()">Event</button>
+
     </body>
 </html>

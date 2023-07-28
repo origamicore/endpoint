@@ -1,6 +1,6 @@
 {
   "name": "@origamicore/endpoint",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Origami Endpoint",
   "main": "dist/index.js",
   "scripts": {
@@ -25,6 +25,6 @@
     "jsonwebtoken": "^8.5.1", 
     "redis": "^4.0.0",
     "websocket": "^1.0.34",
-    "@origamicore/core": "^4.0.1"
+    "@origamicore/core": "^4.0.4"
   }
 }

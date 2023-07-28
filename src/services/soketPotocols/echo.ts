@@ -1,4 +1,4 @@
-import { HttpMethod, MessageModel, Router } from "@origamicore/core";
+import { HttpMethod, MessageModel, RouteResponse, Router } from "@origamicore/core";
 import EndpointConnection from "../../models/endpointConnection";
 import Authorization from "../../modules/authorization";
 import SessionManager from "../../sessionManager/sessionManager";
@@ -66,7 +66,9 @@ export default class EchoPortocol{
         }
         try{
             var resp= await Router.runExternal(data.domain,data.service,
-                new MessageModel(body),'','None')
+                new MessageModel(body),'/'+data.domain+'/'+data.service,'None',(event:RouteResponse)=>{
+                    this.response(null,event,connection,sessionManager,id)
+                })
             this.response(null,resp,connection,sessionManager,id)
         }catch(exp){
             this.response(exp,null,connection,sessionManager,id)

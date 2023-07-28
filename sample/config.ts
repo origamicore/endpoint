@@ -6,7 +6,7 @@ import ConnectionEvent, { ConnectionEventType } from "../src/models/socket/conne
 
 var path = require('path');  
 export default new ConfigModel({
-    defaultMethod:HttpMethod.Get,
+    defaultMethod:HttpMethod.None,
     packageConfig:[
          new EndpointConfig({  
              queue:new QueueController({
