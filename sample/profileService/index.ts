@@ -108,5 +108,16 @@ class ProfileService implements PackageIndex
         console.log('Event Opend >',session);
         
     }
+    
+    @OriService({isPublic:true,method:HttpMethod.Get,service:'profile',})
+    getProfiles()
+    {
+		return 'Get Profile';
+    }
+    @OriService({isPublic:true,method:HttpMethod.Post,service:'profile',})
+    postProfiles()
+    {
+		return 'Post Profile';
+    }
 }
 export default ProfileService

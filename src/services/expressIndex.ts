@@ -3,7 +3,7 @@ import JwtSessionManager from "../sessionManager/jwtSessionManager";
 import RamsSessionManager from "../sessionManager/ramSessionManager";
 import RedisSessionManager from "../sessionManager/redisSessionManager";
 import SessionManager from "../sessionManager/sessionManager";
-import {Router,MessageModel,RouteResponse,ExtrnalService} from '@origamicore/core' 
+import {Router,MessageModel,RouteResponse,ExtrnalService, HttpMethod} from '@origamicore/core' 
 import AuthzEndpoint from "../models/authzEndpoint";  
 import ErrorMessages from "../models/errorMessages";
 import Authorization from "../modules/authorization";
@@ -16,7 +16,7 @@ var express = require('express');
 var bodyParser = require('body-parser'); 
 var fs=require('fs')
 var formidable= require('formidable') ;
-var http = require('http');
+const http = require('http');
 var https = require('https');
 var ips:Map<string,ServiceLimit>=new Map<string,ServiceLimit>();
 var allService:ServiceLimit;
@@ -139,6 +139,13 @@ export default class ExpressIndex
             {
                 return self.sendData(res,404,{message:ErrorMessages.notFound});
             }
+            if(Array.isArray(route))
+            {
+                if(!route.filter(p=>p.method==req.method)[0])
+                {
+                    return self.sendData(res,404,{message:ErrorMessages.notFound});
+                }
+            }
             if(this.config.authz)
             { 
 				try{
@@ -150,7 +157,7 @@ export default class ExpressIndex
             }
             else
             {
-                isAuthz = Authorization.checkAuthorization(data.domain,data.service,session);
+                isAuthz = Authorization.checkAuthorization(data.domain,data.service,session,req.method);
             }
             if(!isAuthz) 
                 return self.sendData(res,403,{message:ErrorMessages.authz}) 
@@ -281,7 +288,16 @@ export default class ExpressIndex
     }
 	async checkUpload(req,data,self:ExpressIndex)
 	{
-        var route:ExtrnalService= Router.getRouteData(data.domain,data.service)
+        let exist=Router.getRouteData(data.domain,data.service)
+        var route:ExtrnalService;
+        if(Array.isArray(exist))
+        {
+            route = exist.filter(p=>p.method==req.method)[0]
+        }
+        else
+        {
+            route =exist
+        }
 		if(route && route.maxUploadSize!=null)
 		{ 
 			try{ 
@@ -416,15 +432,11 @@ export default class ExpressIndex
 	setCors(app:any,config:EndpointConnection)
     {
         if(!config.cors)return;
-        for(var cross of config.cors)
+        if(config.cors.indexOf('*'))
         {
-
             app.use(function (req, res, next) {  
                 if ('OPTIONS' == req.method) {
-                    if(cross=='*')
-                        res.header('Access-Control-Allow-Origin', req.headers.origin);
-                    else
-                        res.header('Access-Control-Allow-Origin', cross);
+                    res.header('Access-Control-Allow-Origin', req.headers.origin); 
                     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
                     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
                     res.setHeader('Access-Control-Allow-Credentials', true);
@@ -432,14 +444,42 @@ export default class ExpressIndex
                 }
                 else
                 {
-                    if(cross=='*')
-                        res.header('Access-Control-Allow-Origin', req.headers.origin);
-                    else
-                        res.header('Access-Control-Allow-Origin', cross);
-                        res.setHeader('Access-Control-Allow-Credentials', true);
+                    res.header('Access-Control-Allow-Origin', req.headers.origin); 
+                    res.setHeader('Access-Control-Allow-Credentials', true);
                     next()
                 }
             });
+
         }
+        else
+        {
+            let corsMap:Map<string,boolean>=new Map<string,boolean>();
+            for(let c of config.cors)
+            {
+                corsMap.set(c,true);
+            }
+            app.use(function (req, res, next) {  
+                if ('OPTIONS' == req.method) { 
+                    if(corsMap.has(req.headers.origin))
+                    {
+                        res.header('Access-Control-Allow-Origin', req.headers.origin);
+                    }
+                    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
+                    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                    res.setHeader('Access-Control-Allow-Credentials', true);
+                    res.status(200).send('OK');
+                }
+                else
+                {
+                    if(corsMap.has(req.headers.origin))
+                    {
+                        res.header('Access-Control-Allow-Origin', req.headers.origin);
+                    }
+                    res.setHeader('Access-Control-Allow-Credentials', true);
+                    next()
+                }
+    
+            });
+        } 
     }
 }

@@ -60,7 +60,7 @@ export default class EchoPortocol{
         else
         {
             
-            var isAuthz = Authorization.checkAuthorization(data.domain,data.service,session);
+            var isAuthz = Authorization.checkAuthorization(data.domain,data.service,session,HttpMethod.None);
             if(!isAuthz) 
                 return connection.sendUTF(JSON.stringify({error:'glb002',id}));
         }
