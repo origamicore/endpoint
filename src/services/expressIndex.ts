@@ -365,10 +365,23 @@ export default class ExpressIndex
 	runServer(app,config:EndpointConnection)
     {
 		var pr=config.protocol;
+        let adresses=['127.0.0.1','localhost']
+        if(config.bindAddress)
+        {
+            if(Array.isArray(config.bindAddress))
+            {
+                adresses=config.bindAddress
+            }
+            else
+            {
+                adresses=[config.bindAddress]
+            }
+        }
         if(pr.type=="http")
         { 
             var server = http.createServer(app);
-            server.listen(pr.port);
+
+            server.listen(pr.port,adresses);
             console.log("\x1b[32m%s\x1b[0m",'http run at port '+ pr.port);
         }
         if(pr.type=="https")
@@ -377,7 +390,7 @@ export default class ExpressIndex
             var certificate = fs.readFileSync(pr.crt, 'utf8');
             var credentials = {key: privateKey, cert: certificate};
             var server = https.createServer(credentials,app);
-            server.listen(pr.port);
+            server.listen(pr.port,adresses);
             console.log("\x1b[32m%s\x1b[0m",'http run at port '+ pr.port);
         }
     }

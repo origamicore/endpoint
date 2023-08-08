@@ -11,7 +11,7 @@ export class EndpointConnectionType
 export default class EndpointConnection
 { 
     name:string;
-    bindAddress:string;
+    bindAddress:string|[];
     type:EndpointConnectionType;
     sessionManager:string;
     allowHeader:string;
@@ -27,7 +27,7 @@ export default class EndpointConnection
             type: EndpointConnectionType, 
             protocol:ConnectionProtocol
             name?: string, 
-            bindAddress?: string, 
+            bindAddress?: string|[], 
             sessionManager?: string, 
             publicFolder?: string[], 
             cors?: string[], 

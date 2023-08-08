@@ -57,7 +57,7 @@ export default new ConfigModel({
                         port:9203 
                     }),
                     cors:['http://sample1.local:9201'],
-                    
+                    bindAddress:'sample1.local'
                 }),
                  new EndpointConnection({
                     type:EndpointConnectionType.Soucket,
