@@ -3,7 +3,7 @@ import {ConfigModel,HttpMethod} from "@origamicore/core";
 import {ConnectionProtocol,EndpointConfig,EndpointConnection,EndpointConnectionType, IpController, QueueController, QueueLimit, ServiceLimit} from "..";  
 import ProfileConfig from "./profileService/models/profileConfig";
 import ConnectionEvent, { ConnectionEventType } from "../src/models/socket/connectionEvent";
-
+import fs from 'fs'
 var path = require('path');  
 export default new ConfigModel({
     defaultMethod:HttpMethod.None,
@@ -41,11 +41,24 @@ export default new ConfigModel({
                      type:EndpointConnectionType.Express,
                      publicFolder:[path.join(__dirname,'../../sample/public')],
                      protocol:new ConnectionProtocol({
-                         type:'http',
-                         port:9201
-                     })
+                         type:'https',
+                         port:9201,
+                         crt: path.join(__dirname,'../../sample/crt.pem') ,
+                         key: path.join(__dirname,'../../sample/key.pem') ,
+                     }),
+                     cors:['https://sample1.local:9201']
                  }),
                  
+                 new EndpointConnection({
+                    type:EndpointConnectionType.Express,
+                    publicFolder:[path.join(__dirname,'../../sample/public')],
+                    protocol:new ConnectionProtocol({
+                        type:'http',
+                        port:9203 
+                    }),
+                    cors:['http://sample1.local:9201'],
+                    
+                }),
                  new EndpointConnection({
                     type:EndpointConnectionType.Soucket,
                     protocol:new ConnectionProtocol({
