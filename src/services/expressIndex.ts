@@ -432,13 +432,16 @@ export default class ExpressIndex
 	setCors(app:any,config:EndpointConnection)
     {
         if(!config.cors)return;
-        if(config.cors.indexOf('*'))
+        if(config.cors.indexOf('*')>-1)
         {
             app.use(function (req, res, next) {  
+                console.log(req.headers.origin);
+                
                 if ('OPTIONS' == req.method) {
                     res.header('Access-Control-Allow-Origin', req.headers.origin); 
                     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-                    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+                    res.header('Access-Control-Allow-Headers',
+                    config.allowHeader?? 'Content-Type, Authorization, Content-Length, X-Requested-With');
                     res.setHeader('Access-Control-Allow-Credentials', true);
                     res.status(200).send('OK');
                 }
@@ -458,15 +461,15 @@ export default class ExpressIndex
             {
                 corsMap.set(c,true);
             }
-            app.use(function (req, res, next) {  
+            app.use(function (req, res, next) { 
+                res.setHeader('Access-Control-Allow-Credentials', true);
                 if ('OPTIONS' == req.method) { 
                     if(corsMap.has(req.headers.origin))
                     {
                         res.header('Access-Control-Allow-Origin', req.headers.origin);
                     }
                     res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,PATCH,OPTIONS');
-                    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
-                    res.setHeader('Access-Control-Allow-Credentials', true);
+                    res.header('Access-Control-Allow-Headers', config.allowHeader??'Content-Type, Authorization, Content-Length, X-Requested-With');
                     res.status(200).send('OK');
                 }
                 else
@@ -474,8 +477,7 @@ export default class ExpressIndex
                     if(corsMap.has(req.headers.origin))
                     {
                         res.header('Access-Control-Allow-Origin', req.headers.origin);
-                    }
-                    res.setHeader('Access-Control-Allow-Credentials', true);
+                    } 
                     next()
                 }
     
