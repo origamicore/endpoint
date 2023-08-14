@@ -12,7 +12,7 @@ export default class EndpointConnection
 { 
     name:string;
     bindAddress:string|[];
-    type:EndpointConnectionType;
+    type:EndpointConnectionType=EndpointConnectionType.Express;
     sessionManager:string;
     allowHeader:string;
     publicFolder:string[]=[];
@@ -24,8 +24,8 @@ export default class EndpointConnection
     events:ConnectionEvent[]=[];
     public constructor(
         fields: {
-            type: EndpointConnectionType, 
             protocol:ConnectionProtocol
+            type?: EndpointConnectionType, 
             name?: string, 
             bindAddress?: string|[], 
             sessionManager?: string, 

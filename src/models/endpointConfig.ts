@@ -5,6 +5,7 @@ import TsOriEndpoint from '..';
 import EndpointConnection from './endpointConnection';
 import IpController from './ipController';
 import QueueController from './queueController';
+import ConnectionProtocol from './connectionProtocol';
 export default class EndpointConfig extends ModuleConfig
 {
     async createInstance(): Promise<PackageIndex> {
@@ -22,8 +23,23 @@ export default class EndpointConfig extends ModuleConfig
             connections: EndpointConnection[]
             ipController?:IpController;
             queue?:QueueController;
-        }) {
-        super(fields);
-        if (fields) Object.assign(this, fields);
+        }|number
+        ) {
+            if(typeof fields=='number')
+            {
+                super({});
+                this.connections=[
+                    new EndpointConnection({
+                        protocol:new ConnectionProtocol({
+                            port:fields
+                        })
+                    })
+                ]
+            }
+            else
+            {
+                super(fields);
+                if (fields) Object.assign(this, fields);
+            }
     }
 }

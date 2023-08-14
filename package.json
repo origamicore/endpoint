@@ -1,7 +1,7 @@
 {
   "name": "@origamicore/endpoint",
-  "version": "1.0.4",
-  "description": "Origami Endpoint",
+  "version": "1.0.5",
+  "description": "OrigamiCore Endpoint",
   "main": "dist/index.js",
   "scripts": {
     "build": "npx tsc",
