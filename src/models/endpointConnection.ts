@@ -23,7 +23,7 @@ export default class EndpointConnection
     debug:boolean
     events:ConnectionEvent[]=[];
     public constructor(
-        fields: {
+        data: {
             protocol:ConnectionProtocol
             type?: EndpointConnectionType, 
             name?: string, 
@@ -37,6 +37,19 @@ export default class EndpointConnection
             debug?:boolean,
             events?:ConnectionEvent[]
         }) {
-        if (fields) Object.assign(this, fields);
+        if (data) {
+            if(data.protocol)this.protocol=data.protocol;
+            if(data.type)this.type=data.type;
+            if(data.name)this.name=data.name;
+            if(data.bindAddress)this.bindAddress=data.bindAddress;
+            if(data.sessionManager)this.sessionManager=data.sessionManager;
+            if(data.publicFolder)this.publicFolder=data.publicFolder;
+            if(data.cors)this.cors=data.cors;
+            if(data.allowHeader)this.allowHeader=data.allowHeader;
+            if(data.authz)this.authz=data.authz;
+            if(data.limit)this.limit=data.limit;
+            if(data.debug)this.debug=data.debug;
+            if(data.events)this.events=data.events;
+        }
     }
 }

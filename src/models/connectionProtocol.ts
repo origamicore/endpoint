@@ -12,7 +12,7 @@ export default class ConnectionProtocol
     redisConfig:RedisConfig;
 
     public constructor(
-        fields?: {
+        data?: {
             port: number  
             type?: 'http'|'https'
             key?: string  
@@ -21,6 +21,14 @@ export default class ConnectionProtocol
             jwtConfig?:JwtConfig
             redisConfig?:RedisConfig
         }) {
-        if (fields) Object.assign(this, fields);
+        if (data) {
+            if(data.port)this.port=data.port;
+            if(data.type)this.type=data.type;
+            if(data.key)this.key=data.key;
+            if(data.crt)this.crt=data.crt;
+            if(data.socketProtocol)this.socketProtocol=data.socketProtocol;
+            if(data.jwtConfig)this.jwtConfig=data.jwtConfig;
+            if(data.redisConfig)this.redisConfig=data.redisConfig;
+        }
     }
 }

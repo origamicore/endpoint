@@ -8,7 +8,7 @@ var path = require('path');
 export default new ConfigModel({
     defaultMethod:HttpMethod.None,
     packageConfig:[
-        // new EndpointConfig(300),
+        // EndpointConfig.create({port:3000,}),
          new EndpointConfig({  
              queue:new QueueController({
                 limits:[
