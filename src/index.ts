@@ -14,7 +14,7 @@ export default class TsOriEndpoint implements PackageIndex
          
         for(var connection of this.config.connections )
         {
-            if(connection.type==EndpointConnectionType.Soucket)
+            if(connection.type==EndpointConnectionType.Socket)
             {
                 this.socketList.push(new SocketIndex(connection))
             }

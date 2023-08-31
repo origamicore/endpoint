@@ -61,7 +61,7 @@ export default new ConfigModel({
                     bindAddress:'sample1.local'
                 }),
                  new EndpointConnection({
-                    type:EndpointConnectionType.Soucket,
+                    type:EndpointConnectionType.Socket,
                     protocol:new ConnectionProtocol({
                         type:'http',
                         port:9202

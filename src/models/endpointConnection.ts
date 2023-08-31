@@ -5,7 +5,7 @@ import ConnectionEvent from "./socket/connectionEvent";
 
 export class EndpointConnectionType
 {
-    static Soucket='socket';
+    static Socket='socket';
     static Express='express';
 }
 export default class EndpointConnection
