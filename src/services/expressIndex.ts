@@ -27,6 +27,7 @@ export default class ExpressIndex
 {
     sessionManager:SessionManager;
     config:EndpointConnection;
+    server:any;
     constructor(config:EndpointConnection )
     {
         this.config=config;
@@ -87,6 +88,13 @@ export default class ExpressIndex
             } 
         }
         return true
+    }
+    async stop()
+    {
+        if(this.server)
+        {
+            this.server.close()
+        }
     }
     async init(ipController?:IpController,queueController?:QueueController)
     {
@@ -382,6 +390,7 @@ export default class ExpressIndex
             var server = http.createServer(app);
 
             server.listen(pr.port,adresses);
+            this.server=server;
             console.log("\x1b[32m%s\x1b[0m",'http run at port '+ pr.port);
         }
         if(pr.type=="https")
@@ -391,6 +400,7 @@ export default class ExpressIndex
             var credentials = {key: privateKey, cert: certificate};
             var server = https.createServer(credentials,app);
             server.listen(pr.port,adresses);
+            this.server=server;
             console.log("\x1b[32m%s\x1b[0m",'http run at port '+ pr.port);
         }
     }

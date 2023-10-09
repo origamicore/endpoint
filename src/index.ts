@@ -37,7 +37,15 @@ export default class TsOriEndpoint implements PackageIndex
         }
         return
     }
-    restart(): Promise<void> {
+    async restart(): Promise<void> {
+        for(var express of this.expressList)
+        {
+            await express.stop();
+        }
+        for(var socket of this.socketList)
+        {
+            await socket.init()
+        }
         throw new Error('Method not implemented.');
     }
     stop(): Promise<void> {
