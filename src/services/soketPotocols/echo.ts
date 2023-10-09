@@ -21,7 +21,7 @@ export default class EchoPortocol{
             tmpToken.delete(key)
         }
         let d =await Router.runInternal(event.domain,event.service,
-            new MessageModel(body))
+            new MessageModel(body),()=>{},key)
         let r=0;
     }
     static async newMessage(message:any,connection:any,key:any,sessionManager:SessionManager,config:EndpointConnection)
@@ -53,7 +53,8 @@ export default class EchoPortocol{
         }
         if(config.authz)
         {
-            var dt =Router.runExternal(config.authz.domain,config.authz.service,new MessageModel({data:{domain:data.domain,service:data.service},session:session.session}),'','None')
+            var dt =Router.runExternal(config.authz.domain,config.authz.service,new MessageModel({data:{domain:data.domain,service:data.service},session:session.session})
+            ,'','None')
             if(!(await dt).error)
                 return connection.sendUTF(JSON.stringify({error:'glb002',id}));
         }
@@ -66,9 +67,16 @@ export default class EchoPortocol{
         }
         try{
             var resp= await Router.runExternal(data.domain,data.service,
-                new MessageModel(body),'/'+data.domain+'/'+data.service,'None',(event:RouteResponse)=>{
-                    this.response(null,event,connection,sessionManager,id)
-                })
+                new MessageModel(body),'/'+data.domain+'/'+data.service,'None',(event:RouteResponse,reject?:boolean)=>{
+                    if(reject)
+                    {
+                        connection.close()
+                    }
+                    else
+                    {
+                        this.response(null,event,connection,sessionManager,id)
+                    }
+                },key)
             this.response(null,resp,connection,sessionManager,id)
         }catch(exp){
             this.response(exp,null,connection,sessionManager,id)

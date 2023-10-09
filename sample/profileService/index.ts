@@ -1,5 +1,5 @@
  
-import {OriInjectable,PackageIndex,DataInput, OriService, SessionInput,ModuleConfig, RouteResponse, HttpMethod, EventInput} from "@origamicore/core"; 
+import {OriInjectable,PackageIndex,DataInput, OriService, SessionInput,ModuleConfig, RouteResponse, HttpMethod, EventInput, EventKeyInput} from "@origamicore/core"; 
 import ProfileConfig from "./models/profileConfig";
 import ProfileModel from "./models/profileModel";
 import Roles from "./models/roles";
@@ -74,15 +74,15 @@ class ProfileService implements PackageIndex
     }
  
     @OriService({isInternal:true})
-    async openSession(@SessionInput session)
+    async openSession(@SessionInput session,@EventKeyInput key:string)
     { 
-        console.log('Connection Opend >',session);
+        console.log('Connection Opend >',session,key);
         
     }
     @OriService({isInternal:true})
-    async closeSession(@SessionInput session)
+    async closeSession(@SessionInput session,@EventKeyInput key:string)
     { 
-        console.log('Connection Closed >',session);
+        console.log('Connection Closed >',session,key);
         let id = session.userid;
         if(timers[id])
         {
@@ -92,20 +92,21 @@ class ProfileService implements PackageIndex
 
     
     @OriService({isEvent:true})
-    async sampleEvent(@SessionInput session,@EventInput event:(count:number)=>void)
+    async sampleEvent(@SessionInput session,@EventInput event:(count:number,reject?:boolean)=>void,@EventKeyInput key:string)
     { 
         let id = session.userid;
         if(timers[id])
         {
             clearInterval(timers[id])
-        }
+        } 
+        
         let counter:number=0;
         timers[id] = setInterval(()=>{
             counter++;
-            event(counter);
+            event(counter,true);
         },1000)
         
-        console.log('Event Opend >',session);
+        console.log('Event Opend >',key,session);
         
     }
     
