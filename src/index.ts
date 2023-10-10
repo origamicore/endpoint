@@ -11,7 +11,8 @@ export default class TsOriEndpoint implements PackageIndex
     private socketList:SocketIndex[]=[];
     jsonConfig(config: EndpointConfig): Promise<void> {
          this.config=config ;
-         
+         this.socketList=[]
+         this.expressList=[]
         for(var connection of this.config.connections )
         {
             if(connection.type==EndpointConnectionType.Socket)
@@ -34,8 +35,7 @@ export default class TsOriEndpoint implements PackageIndex
         for(var socket of this.socketList)
         {
             await socket.init()
-        }
-        return
+        } 
     }
     async restart(): Promise<void> {
         for(var express of this.expressList)
@@ -44,12 +44,18 @@ export default class TsOriEndpoint implements PackageIndex
         }
         for(var socket of this.socketList)
         {
-            await socket.init()
-        }
-        throw new Error('Method not implemented.');
+            await socket.stop()
+        } 
     }
-    stop(): Promise<void> {
-        throw new Error('Method not implemented.');
+    async stop(): Promise<void> {
+        for(var express of this.expressList)
+        {
+            await express.stop();
+        }
+        for(var socket of this.socketList)
+        {
+            await socket.stop()
+        } 
     }
 
 }

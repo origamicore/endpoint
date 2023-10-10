@@ -1,6 +1,6 @@
 {
   "name": "@origamicore/endpoint",
-  "version": "1.0.10",
+  "version": "1.0.12",
   "description": "OrigamiCore Endpoint",
   "main": "dist/index.js",
   "scripts": {

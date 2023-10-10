@@ -13,9 +13,17 @@ export default class SocketIndex
 {
     sessionManager:SessionManager;
     config:EndpointConnection;
+    server:any;
     constructor(config:EndpointConnection)
     {
         this.config=config;
+    }
+    async stop()
+    {
+        if(this.server)
+        {
+            this.server.close()
+        }
     }
     async init()
     {
@@ -43,6 +51,7 @@ export default class SocketIndex
                 response.end();    
             })      
         }
+        this.server=server;
         server.listen(protocol.port, ()=> {
             console.log( "\x1b[32m%s\x1b[0m",protocol.type+ ' Socket run at port '+protocol.port);
         });    
