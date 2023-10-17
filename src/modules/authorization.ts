@@ -15,6 +15,7 @@ export default class Authorization
         {
             route=find;
         }
+        if(!route)return false
         if(route.isPublic)return true;
         if(!session?.userid) return false;
         if(route.roles)
