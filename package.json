@@ -1,9 +1,10 @@
 {
   "name": "@origamicore/endpoint",
-  "version": "1.0.13",
+  "version": "1.1.0",
   "description": "OrigamiCore Endpoint",
   "main": "dist/index.js",
   "scripts": {
+    "bun":"bun sample/bunSample.ts",
     "build": "npx tsc",
     "sample": "node ./dist/sample/endpointSample",
     "publish": "npm publish"
@@ -17,6 +18,7 @@
   "author": "vahid.hossaini@gmail.com",
   "license": "MIT",
   "devDependencies": {
+    "bun-types": "^1.0.7",
     "typescript": "^4.6.4"
   },
   "repository": {

@@ -7,6 +7,7 @@ export class EndpointConnectionType
 {
     static Socket='socket';
     static Express='express';
+    static Bun='bun';
 }
 export default class EndpointConnection
 { 

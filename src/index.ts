@@ -3,12 +3,14 @@ import EndpointConfig from './models/endpointConfig';
 import { EndpointConnectionType } from './models/endpointConnection';
 import ExpressIndex from './services/expressIndex';
 import SocketIndex from './services/socketIndex';
+import BunIndex from './services/bunIndex';
 export default class TsOriEndpoint implements PackageIndex
 {
     name: string='endpoint';
     private config:EndpointConfig;
     private expressList:ExpressIndex[]=[];
     private socketList:SocketIndex[]=[];
+    private bunList:BunIndex[]=[];
     jsonConfig(config: EndpointConfig): Promise<void> {
          this.config=config ;
          this.socketList=[]
@@ -18,6 +20,11 @@ export default class TsOriEndpoint implements PackageIndex
             if(connection.type==EndpointConnectionType.Socket)
             {
                 this.socketList.push(new SocketIndex(connection))
+            }
+            else if(connection.type==EndpointConnectionType.Bun)
+            {
+
+                this.bunList.push(new BunIndex(connection))
             }
             else
             {
@@ -35,6 +42,10 @@ export default class TsOriEndpoint implements PackageIndex
         for(var socket of this.socketList)
         {
             await socket.init()
+        } 
+        for(var bun of this.bunList)
+        {
+            await bun.init(this.config.ipController,this.config.queue)
         } 
     }
     async restart(): Promise<void> {

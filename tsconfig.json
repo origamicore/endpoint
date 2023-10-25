@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "types": ["bun-types"],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true, 
     "module": "commonjs",
