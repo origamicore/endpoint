@@ -6,6 +6,8 @@ OrigamiEndpoint requires [OrigamiCore](https://www.npmjs.com/package/@origamicor
 npm install @origamicore/core
 npm install @origamicore/endpoint
 ```
+## BunJS Sample 
+[Run BunJS](https://github.com/origamicore/endpoint/blob/main/sample/bunSample.ts)
 
 ## Samples
 [Run Express And Socket](https://github.com/origamicore/endpoint/tree/main/sample)
