@@ -55,12 +55,14 @@ var ips:Map<string,ServiceLimit>=new Map<string,ServiceLimit>();
         if(this.config.protocol.type=='https')
         {
             tls={
+                // @ts-ignore
                 cert: Bun.file(this.config.protocol.crt),
+                // @ts-ignore
                 key: Bun.file(this.config.protocol.key),
               }
         }
 
-
+        // @ts-ignore
         Bun.serve({
             port: this.config.protocol.port,
             maxRequestBodySize:this.config.limit?.bodyLimit ?? 100*1024,
@@ -319,6 +321,7 @@ var ips:Map<string,ServiceLimit>=new Map<string,ServiceLimit>();
              
             if(state.isFile())
             {
+                // @ts-ignore
                 const file = Bun.file(filePath);
                 return new Response(file);
             }
