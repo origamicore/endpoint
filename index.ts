@@ -1,3 +1,4 @@
+import { AddedResponse } from "@origamicore/core";
 import TsOriEndpoint from "./src";
 import AuthzEndpoint from "./src/models/authzEndpoint";
 import ConnectionProtocol from "./src/models/connectionProtocol";
@@ -33,6 +34,7 @@ export {
     RamsSessionManager,
     ConnectionEvent,
     ConnectionEventType,
-    UploadFileModel
+    UploadFileModel,
+    AddedResponse
 }
 export default TsOriEndpoint;

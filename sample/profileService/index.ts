@@ -1,5 +1,5 @@
  
-import {OriInjectable,PackageIndex,DataInput, OriService, SessionInput,ModuleConfig, RouteResponse, HttpMethod, EventInput, EventKeyInput} from "@origamicore/core"; 
+import {OriInjectable,PackageIndex,DataInput, OriService, SessionInput,ModuleConfig, RouteResponse, HttpMethod, EventInput, EventKeyInput, AddedResponse, ResponseDataModel} from "@origamicore/core"; 
 import ProfileConfig from "./models/profileConfig";
 import ProfileModel from "./models/profileModel";
 import Roles from "./models/roles";
@@ -91,6 +91,20 @@ class ProfileService implements PackageIndex
     }
 
     
+    @OriService({isEvent:true,isPublic:true})
+    async httpStream(@EventInput event:(count:string,reject?:boolean)=>void )
+    { 
+        let counter:number=0;
+        let interval= setInterval(()=>{
+            counter++;
+            if(counter>2)
+            {
+                clearInterval(interval)
+            }
+            event(counter.toString(),counter>2);
+        },1000) 
+        return new RouteResponse({addedResponse:new AddedResponse({stream:'1'})})
+    }
     @OriService({isEvent:true})
     async sampleEvent(@SessionInput session,@EventInput event:(count:number,reject?:boolean)=>void,@EventKeyInput key:string)
     { 

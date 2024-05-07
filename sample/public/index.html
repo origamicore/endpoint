@@ -3,7 +3,7 @@
         
         <script>
             var name='';
-            var baseUrl='http://localhost:9201/profile/'
+            var baseUrl='http://localhost:9203/profile/'
             function callApi(url, cFunction) {
                 const xhttp = new XMLHttpRequest();
                 xhttp.onload = function() {
@@ -50,6 +50,12 @@
                     alert('you are login')
                 })
             }
+            function sampleEvent()
+            {
+                callApi('httpStream',(data)=>{ 
+                    console.log(data); 
+                })
+            }
             function checkAdmim()
             {
                 callApi('isAdmin',(data)=>{ 
@@ -77,5 +83,7 @@
         <br/>
         <button onclick="adminlogin()">Admin Login</button>
         <button onclick="checkAdmim()">Chcek Admin</button>
+
+        <button onclick="sampleEvent()">sampleEvent</button>
     </body>
 </html>

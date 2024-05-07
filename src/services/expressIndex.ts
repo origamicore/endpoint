@@ -183,13 +183,38 @@ export default class ExpressIndex
 			if(!upload)
 				return self.sendData(res,413,{message:ErrorMessages.upload})
 			try{
-                
-                var responseData=await Router.runExternal(data.domain,data.service,new MessageModel(data.body),data.path,req.method);
+                 
+                var responseData=await Router.runExternal(data.domain,data.service,new MessageModel(data.body),data.path,req.method,(data:RouteResponse,reject?:boolean)=>{
+                    
+                    if(data.response) 
+                    { 
+                        if(typeof(data.response.data)=='string' )
+                        {
+                            res.write(data.response.data )
+                        }
+                        else
+                        {
+                            res.write(JSON.stringify(data.response.data)   )
+
+                        } 
+                        if(reject)
+                        {
+                            res.end()
+                        }
+                    }
+                }); 
                 
 				var token= await this.setSession(req,responseData);
                 var addedResponse=responseData?.addedResponse;
                 if(addedResponse)
                 {
+                    if(responseData.addedResponse.stream) 
+                    {
+                        res.set( 'Content-Type', 'text/event-stream'  );
+                        res.set( 'Cache-Control', 'no-cache'  );
+                        res.set( 'Connection', 'keep-alive'  );
+                        return 
+                    }
                     if(responseData.addedResponse.redirect) 
                         return res.redirect(responseData.addedResponse.redirect) 
                     
