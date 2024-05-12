@@ -23,20 +23,22 @@ export default class EndpointConnection
     protocol:ConnectionProtocol;
     debug:boolean
     events:ConnectionEvent[]=[];
+    logAddress:string;
     public constructor(
         data: {
             protocol:ConnectionProtocol
-            type?: EndpointConnectionType, 
-            name?: string, 
-            bindAddress?: string|[], 
-            sessionManager?: string, 
-            publicFolder?: string[], 
-            cors?: string[], 
-            allowHeader?: string, 
-            authz?:AuthzEndpoint,
-            limit?:LimitModel,
-            debug?:boolean,
-            events?:ConnectionEvent[]
+            type?: EndpointConnectionType;
+            name?: string; 
+            bindAddress?: string|[]; 
+            sessionManager?: string; 
+            publicFolder?: string[]; 
+            cors?: string[];
+            allowHeader?: string; 
+            authz?:AuthzEndpoint;
+            limit?:LimitModel;
+            debug?:boolean;
+            events?:ConnectionEvent[];
+            logAddress?:string;
         }) {
         if (data) {
             if(data.protocol)this.protocol=data.protocol;
@@ -51,6 +53,7 @@ export default class EndpointConnection
             if(data.limit)this.limit=data.limit;
             if(data.debug)this.debug=data.debug;
             if(data.events)this.events=data.events;
+            if(data.logAddress)this.logAddress=data.logAddress;
         }
     }
 }

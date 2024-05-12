@@ -11,6 +11,7 @@ import UploadFileModel from "../models/uploadFileModel";
 import IpController, { ServiceLimit } from "../models/ipController";
 import QueueControl from "../modules/queueControl";
 import QueueController from "../models/queueController";
+import LogController from "../modules/logController";
 var url = require('url');
 var express = require('express');
 var bodyParser = require('body-parser'); 
@@ -28,9 +29,11 @@ export default class ExpressIndex
     sessionManager:SessionManager;
     config:EndpointConnection;
     server:any;
+    logController:LogController;
     constructor(config:EndpointConnection )
     {
         this.config=config;
+        this.logController=new LogController(config.logAddress,config.protocol.port)
     }
     checkIp(req,data)
     {
@@ -128,6 +131,7 @@ export default class ExpressIndex
         {
             qcontrol=new QueueControl(queueController);
         }
+        let log =this.logController;
         app.use(async(req, res, next)=> { 
              
             
@@ -183,18 +187,18 @@ export default class ExpressIndex
 			if(!upload)
 				return self.sendData(res,413,{message:ErrorMessages.upload})
 			try{
-                 
+                let start=new Date().getTime()
                 var responseData=await Router.runExternal(data.domain,data.service,new MessageModel(data.body),data.path,req.method,(data:RouteResponse,reject?:boolean)=>{
                     
                     if(data.response) 
                     { 
                         if(typeof(data.response.data)=='string' )
                         {
-                            res.write(data.response.data )
+                            res.write(`data: ${data.response.data}\n\n`); 
                         }
                         else
                         {
-                            res.write(JSON.stringify(data.response.data)   )
+                            res.write(`data: ${JSON.stringify(data.response.data)}\n\n`); 
 
                         } 
                         if(reject)
@@ -203,7 +207,7 @@ export default class ExpressIndex
                         }
                     }
                 }); 
-                
+                log.addLog(data.domain,data.service,new Date().getTime()- start)
 				var token= await this.setSession(req,responseData);
                 var addedResponse=responseData?.addedResponse;
                 if(addedResponse)

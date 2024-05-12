@@ -51,6 +51,7 @@ export default new ConfigModel({
                  }),
                  
                  new EndpointConnection({
+                    logAddress:'http://localhost:5000',
                     type:EndpointConnectionType.Express,
                     publicFolder:[path.join(__dirname,'../../sample/public')],
                     protocol:new ConnectionProtocol({

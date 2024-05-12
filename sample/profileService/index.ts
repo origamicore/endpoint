@@ -48,6 +48,11 @@ class ProfileService implements PackageIndex
     async isLogin()
     { 
         //return name;
+                await new Promise((res)=>{
+                    setTimeout(()=>{
+                        res({})
+                    },400)
+                })
         return new RouteResponse({})
     }   
     @OriService( )
