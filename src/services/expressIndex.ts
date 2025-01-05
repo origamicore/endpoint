@@ -194,11 +194,11 @@ export default class ExpressIndex
                     { 
                         if(typeof(data.response.data)=='string' )
                         {
-                            res.write(`data: ${data.response.data}\n\n`); 
+                            res.write(`${data.response.data}`); 
                         }
                         else
                         {
-                            res.write(`data: ${JSON.stringify(data.response.data)}\n\n`); 
+                            res.write(`${JSON.stringify(data.response.data)}`); 
 
                         } 
                         if(reject)

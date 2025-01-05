@@ -3,6 +3,7 @@ import {OriInjectable,PackageIndex,DataInput, OriService, SessionInput,ModuleCon
 import ProfileConfig from "./models/profileConfig";
 import ProfileModel from "./models/profileModel";
 import Roles from "./models/roles";
+import UploadFileModel from "../../src/models/uploadFileModel";
  
 let timers:any={};
 @OriInjectable({domain:'profile'})
@@ -108,7 +109,7 @@ class ProfileService implements PackageIndex
             }
             event(counter.toString(),counter>2);
         },1000) 
-        return new RouteResponse({addedResponse:new AddedResponse({stream:'1'})})
+        return new RouteResponse({addedResponse:new AddedResponse({stream:true})})
     }
     @OriService({isEvent:true})
     async sampleEvent(@SessionInput session,@EventInput event:(count:number,reject?:boolean)=>void,@EventKeyInput key:string)
@@ -138,6 +139,13 @@ class ProfileService implements PackageIndex
     postProfiles()
     {
 		return 'Post Profile';
+    }
+    @OriService({isPublic:true,maxUploadSize:10*1024*1024})
+    uploadFile(file:UploadFileModel)
+    {
+        console.log(file);
+        
+		return  ;
     }
 }
 export default ProfileService

@@ -1,6 +1,6 @@
 {
   "name": "@origamicore/endpoint",
-  "version": "1.1.6",
+  "version": "1.1.8",
   "description": "OrigamiCore Endpoint",
   "main": "dist/index.js",
   "scripts": {
@@ -27,8 +27,8 @@
   },
   "dependencies": {
     "@origamicore/base": "^0.1.0",
-    "@origamicore/core": "^4.1.10",
-    "@types/node": "^20.9.3",
+    "@origamicore/core": "^4.1.17",
+    "@types/node": "^20.12.12",
     "express": "^4.18.1",
     "formidable": "^2.0.1",
     "jsonwebtoken": "^8.5.1",
